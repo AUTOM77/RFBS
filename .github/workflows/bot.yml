@@ -46,3 +46,36 @@ jobs:
       push_tag: ${{ needs.push.outputs.tag }}
       note: add ${{ needs.push.outputs.tag }}
     secrets: inherit
+
+  cross-release:
+    uses: AUTOM77/Rust-Actions/.github/workflows/cross-compile.yml@main
+    secrets: inherit
+    strategy:
+      matrix:
+        include:
+          -
+            target: 'x86_64-unknown-linux-musl'
+            platform: 'ubuntu-latest'
+          -
+            target: 'x86_64-unknown-linux-gnu'
+            platform: 'ubuntu-latest'
+          - target: aarch64-unknown-linux-musl
+            platform: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            platform: ubuntu-latest
+          - target: aarch64-apple-darwin
+            platform: macos-latest
+          -
+            target: 'x86_64-apple-darwin'
+            platform: 'macos-latest'
+          -
+            target: 'x86_64-pc-windows-gnu'
+            platform: 'windows-latest'
+          -
+            target: 'x86_64-pc-windows-msvc'
+            platform: 'windows-latest'
+    with:
+      pushed_tag: "v0.1.1"
+      target: ${{ matrix.target }}
+      platform: ${{ matrix.platform }}
+      binary: "rfbs"
