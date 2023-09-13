@@ -3,7 +3,7 @@ name: bot
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CARGO_TERM_COLOR: always
-  CARGO_LOCA: "Cargo.toml"
+  CARGO: "Cargo.toml"
 
 permissions:
   contents: write
@@ -18,7 +18,7 @@ jobs:
   ready:
     uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
-      cargo_loc: $CARGO_LOCA
+      cargo_loc: $CARGO
     secrets: inherit
 
   push:
