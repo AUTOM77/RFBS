@@ -3,7 +3,7 @@ name: bot
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CARGO_TERM_COLOR: always
-  CARGO: "Cargo.toml"
+  CARGO_LOCA: "Cargo.toml"
 
 permissions:
   contents: write
@@ -15,10 +15,23 @@ on:
       - "main"
 
 jobs:
+  pre:
+    runs-on: ubuntu-latest
+    outputs:
+          cargo_loc: ${{ steps.foo.outputs.tag }}
+      - 
+        id: foo
+        run: |
+          echo cargo_loc=$CARGO_LOCA >> $GITHUB_OUTPUT
+        name: Foo
+        shell: bash
+
   ready:
+    needs:
+      - pre
     uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
-      cargo_path: "$CARGO"
+      cargo_path: ${{ needs.pre.outputs.cargo_loc }}
     secrets: inherit
 
   push:
