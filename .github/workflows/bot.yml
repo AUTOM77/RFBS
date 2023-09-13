@@ -1,0 +1,34 @@
+name: bot
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CARGO_TERM_COLOR: always
+  CARGO_LOCA: "Cargo.toml"
+  ACTION: "AUTOM77/Rust-Actions/.github/workflows"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  ready:
+    uses: $ACTION/cargo-version.yml@main
+    with:
+      cargo_loc: $CARGO_LOCA
+
+  tag:
+    needs:
+      - ready
+    uses: $ACTION/push-tag.yml@main
+    with:
+      tag: v${{ needs.ready.outputs.version }}
+
+  publish:
+    needs:
+      - tag
+    uses: $ACTION/push-release.yml@main
+    with:
+      push_tag: ${{ needs.tag.outputs.push_tag }}
+      note: add ${{ needs.tag.outputs.push_tag }}
