@@ -16,6 +16,7 @@ jobs:
     uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
       cargo_loc: $CARGO_LOCA
+    secrets: inherit
 
   tag:
     needs:
@@ -23,6 +24,7 @@ jobs:
     uses: AUTOM77/Rust-Actions/.github/workflows/push-tag.yml@main
     with:
       tag: v${{ needs.ready.outputs.version }}
+    secrets: inherit
 
   publish:
     needs:
@@ -31,3 +33,4 @@ jobs:
     with:
       push_tag: ${{ needs.tag.outputs.push_tag }}
       note: add ${{ needs.tag.outputs.push_tag }}
+    secrets: inherit
