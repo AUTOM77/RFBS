@@ -15,23 +15,19 @@ on:
       - "main"
 
 jobs:
-  foo:
+  pre:
     runs-on: ubuntu-latest
     outputs:
-          cargo_loc: ${{ steps.bar.outputs.cargo_loc }}
+      cargo_loc: ${{ env.CARGO_LOCA }}
     steps:
-      - 
-        id: bar
-        run: |
-          echo cargo_loc=$CARGO_LOCA >> $GITHUB_OUTPUT
-        shell: bash
+      - run: echo "Bypass Restriction"
 
   ready:
     needs:
-      - foo
+      - pre
     uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
-      cargo_path: ${{ needs.foo.outputs.cargo_loc }}
+      cargo_path: ${{ needs.pre.outputs.cargo_loc }}
     secrets: inherit
 
   push:
