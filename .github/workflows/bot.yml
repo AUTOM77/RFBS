@@ -18,7 +18,7 @@ jobs:
   ready:
     uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
-      cargo_loc: "${{ env.CARGO_LOCA}}"
+      cargo_loc: "${{ CARGO_LOCA }}"
     secrets: inherit
 
   push:
