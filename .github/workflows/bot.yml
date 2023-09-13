@@ -4,6 +4,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CARGO_TERM_COLOR: always
   CARGO_LOCA: "Cargo.toml"
+  CARGO_BIN: "rfbs"
 
 permissions:
   contents: write
@@ -19,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cargo_loc: ${{ env.CARGO_LOCA }}
+      cargo_bin: ${{ env.CARGO_BIN }}
     steps:
       - run: echo "Bypass Restriction"
 
@@ -48,34 +50,11 @@ jobs:
     secrets: inherit
 
   cross-release:
-    uses: AUTOM77/Rust-Actions/.github/workflows/cross-compile.yml@main
-    secrets: inherit
-    strategy:
-      matrix:
-        include:
-          -
-            target: 'x86_64-unknown-linux-musl'
-            platform: 'ubuntu-latest'
-          -
-            target: 'x86_64-unknown-linux-gnu'
-            platform: 'ubuntu-latest'
-          - target: aarch64-unknown-linux-musl
-            platform: ubuntu-latest
-          - target: aarch64-unknown-linux-gnu
-            platform: ubuntu-latest
-          - target: aarch64-apple-darwin
-            platform: macos-latest
-          -
-            target: 'x86_64-apple-darwin'
-            platform: 'macos-latest'
-          -
-            target: 'x86_64-pc-windows-gnu'
-            platform: 'windows-latest'
-          -
-            target: 'x86_64-pc-windows-msvc'
-            platform: 'windows-latest'
+    needs:
+      - pre
+      - publish
+    uses: AUTOM77/Rust-Actions/.github/workflows/matrix-upload.yml@main
     with:
-      pushed_tag: "v0.1.1"
-      target: ${{ matrix.target }}
-      platform: ${{ matrix.platform }}
-      binary: "rfbs"
+      binary: ${{ needs.pre.outputs.cargo_bin }}
+      pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
+    secrets: inherit
