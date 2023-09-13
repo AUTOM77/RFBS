@@ -21,7 +21,7 @@ jobs:
       cargo_loc: "Cargo.toml"
     secrets: inherit
 
-  tag:
+  push:
     needs:
       - ready
     uses: AUTOM77/Rust-Actions/.github/workflows/push-tag.yml@main
@@ -31,9 +31,9 @@ jobs:
 
   publish:
     needs:
-      - tag
+      - push
     uses: AUTOM77/Rust-Actions/.github/workflows/push-release.yml@main
     with:
-      push_tag: ${{ needs.tag.outputs.push_tag }}
-      note: add ${{ needs.tag.outputs.push_tag }}
+      push_tag: ${{ needs.push.outputs.tag }}
+      note: add ${{ needs.push.outputs.tag }}
     secrets: inherit
