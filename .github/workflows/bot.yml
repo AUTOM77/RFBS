@@ -4,7 +4,6 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CARGO_TERM_COLOR: always
   CARGO_LOCA: "Cargo.toml"
-  ACTION: AUTOM77/Rust-Actions/.github/workflows
 
 permissions:
   contents: write
@@ -17,15 +16,15 @@ on:
 
 jobs:
   ready:
-    uses: $ACTION/cargo-version.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
     with:
-      cargo_loc: "Cargo.toml"
+      cargo_loc: "${{ env.CARGO_LOCA}}"
     secrets: inherit
 
   push:
     needs:
       - ready
-    uses: $ACTION/push-tag.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/push-tag.yml@main
     with:
       version: v${{ needs.ready.outputs.version }}
     secrets: inherit
@@ -33,7 +32,7 @@ jobs:
   publish:
     needs:
       - push
-    uses: $ACTION/push-release.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/push-release.yml@main
     with:
       push_tag: ${{ needs.push.outputs.tag }}
       note: add ${{ needs.push.outputs.tag }}
