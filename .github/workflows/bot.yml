@@ -35,7 +35,7 @@ jobs:
   push:
     needs:
       - ready
-    uses: AUTOM77/Rust-Actions/.github/workflows/push-tag.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/create-tag.yml@main
     with:
       version: v${{ needs.ready.outputs.version }}
     secrets: inherit
@@ -43,7 +43,7 @@ jobs:
   publish:
     needs:
       - push
-    uses: AUTOM77/Rust-Actions/.github/workflows/push-release.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/pre-release.yml@main
     with:
       push_tag: ${{ needs.push.outputs.tag }}
       note: add ${{ needs.push.outputs.tag }}
@@ -53,7 +53,7 @@ jobs:
     needs:
       - pre
       - publish
-    uses: AUTOM77/Rust-Actions/.github/workflows/matrix-upload.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
     with:
       binary: ${{ needs.pre.outputs.cargo_bin }}
       pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
