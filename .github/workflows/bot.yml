@@ -24,37 +24,46 @@ jobs:
     steps:
       - run: echo "Bypass Restriction"
 
-  ready:
+  call:
     needs:
       - pre
-    uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
+    uses: AUTOM77/Rust-Actions/.github/workflows/_bot.yml@main
     with:
-      cargo_path: ${{ needs.pre.outputs.cargo_loc }}
+      cargo_loc: ${{ env.CARGO_LOCA }}
+      cargo_bin: ${{ env.CARGO_BIN }}
     secrets: inherit
 
-  push:
-    needs:
-      - ready
-    uses: AUTOM77/Rust-Actions/.github/workflows/create-tag.yml@main
-    with:
-      version: v${{ needs.ready.outputs.version }}
-    secrets: inherit
+  # ready:
+  #   needs:
+  #     - pre
+  #   uses: AUTOM77/Rust-Actions/.github/workflows/cargo-version.yml@main
+  #   with:
+  #     cargo_path: ${{ needs.pre.outputs.cargo_loc }}
+  #   secrets: inherit
 
-  publish:
-    needs:
-      - push
-    uses: AUTOM77/Rust-Actions/.github/workflows/pre-release.yml@main
-    with:
-      push_tag: ${{ needs.push.outputs.tag }}
-      note: add ${{ needs.push.outputs.tag }}
-    secrets: inherit
+  # push:
+  #   needs:
+  #     - ready
+  #   uses: AUTOM77/Rust-Actions/.github/workflows/create-tag.yml@main
+  #   with:
+  #     version: v${{ needs.ready.outputs.version }}
+  #   secrets: inherit
 
-  cross-release:
-    needs:
-      - pre
-      - publish
-    uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
-    with:
-      binary: ${{ needs.pre.outputs.cargo_bin }}
-      pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
-    secrets: inherit
+  # publish:
+  #   needs:
+  #     - push
+  #   uses: AUTOM77/Rust-Actions/.github/workflows/pre-release.yml@main
+  #   with:
+  #     push_tag: ${{ needs.push.outputs.tag }}
+  #     note: add ${{ needs.push.outputs.tag }}
+  #   secrets: inherit
+
+  # cross-release:
+  #   needs:
+  #     - pre
+  #     - publish
+  #   uses: AUTOM77/Rust-Actions/.github/workflows/release-matrix.yml@main
+  #   with:
+  #     binary: ${{ needs.pre.outputs.cargo_bin }}
+  #     pushed_tag: ${{ needs.publish.outputs.pushed_tag }}
+  #   secrets: inherit
