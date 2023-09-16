@@ -29,6 +29,6 @@ jobs:
       - pre
     uses: AUTOM77/Rust-Actions/.github/workflows/_bot.yml@main
     with:
-      cargo_loc: ${{ env.CARGO_LOCA }}
-      cargo_bin: ${{ env.CARGO_BIN }}
+      cargo_loc: ${{ needs.pre.outputs.cargo_loc }}
+      cargo_bin: ${{ needs.pre.outputs.cargo_bin }}
     secrets: inherit
