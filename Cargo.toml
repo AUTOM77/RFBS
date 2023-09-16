@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 hyper = { version = "0.14", features = ["full"] }
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1", features = ["io-util", "fs"] }
 
 [profile.dev]
 opt-level = 0
